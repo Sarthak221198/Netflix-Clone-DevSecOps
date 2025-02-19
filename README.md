@@ -208,7 +208,7 @@ Access Prometheus in a web browser using the server's IP and port 9090:
 
 We can see the local host present as the data source which is up and running on port 9090
 
-![Screenshot](images/image4.png)
+![Screenshot](images/images4.png)
 
 ## Step 2 — Installing Node Exporter
 
@@ -298,14 +298,14 @@ curl -X POST http://localhost:9090/-/reload
 
 Installing the Prometheus plugin in Jenkins is required to enable metric scraping by Prometheus.
 
-![Screenshot](images/image5.png)
+![Screenshot](images/images5.png)
 
 We can verify that the targets are healthy and visible on the Prometheus application
 
 ```sh
 http://<ip>:9090/targets
 ```
-![Screenshot](images/image6.png)
+![Screenshot](images/images6.png)
 
 ## Step 2 — Installing Grafana
 
