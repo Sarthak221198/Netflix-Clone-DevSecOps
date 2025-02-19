@@ -397,7 +397,7 @@ Integrate Jenkins with Prometheus to monitor the CI/CD pipeline.
 ![Screenshot](images/images8.png)
 
 
-- rometheus server monitoring over grafana
+- Prometheus server monitoring over grafana
 
 ![Screenshot](images/images9.png)
 
