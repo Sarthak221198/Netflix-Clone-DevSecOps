@@ -111,7 +111,10 @@ To integrate with The Movie Database (TMDB) and access movie-related data, you n
 Why is the TMDB API Key Needed?
 - The API key acts as an authentication mechanism that allows your application to access TMDB’s vast database of movies, TV shows, and related metadata. It enables fetching movie details, searching for films, displaying posters, and integrating movie-related content into your project.
 
+## 🔹 Monitoring Tools installation
 
+## Step 1 — Launch AWS Infrastructure
+- Launch an **Ubuntu 22.04 T2 Large**  with an elastic IP associated with the VM (to have the same public IP incase of mutiple restarts)
 
 
 ### **Step 2 — CI/CD Pipeline with Jenkins**
