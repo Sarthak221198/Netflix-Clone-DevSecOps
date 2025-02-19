@@ -458,45 +458,162 @@ Now, we will receive notifications for every successful and failed build in Jenk
 
 - Goto Manage Jenkins → Tools → Install JDK(17) and NodeJs(16)→ Click on Apply and Save
 
+![Screenshot](images/images16.png)
 
-### **Step 2 — CI/CD Pipeline with Jenkins**
-- Install required Jenkins plugins:  
-  - **JDK**, **SonarQube Scanner**, **NodeJS**, **OWASP Dependency Check**
-- Configure a **Declarative Pipeline** in Jenkins.
-- Integrate Jenkins with GitHub.
+![Screenshot](images/images17.png)
 
-### **Step 3 — Docker & Kubernetes Deployment**
-- Build a **Docker Image** for the Netflix Clone.
-- Push the image to **DockerHub**.
-- Deploy the image using Docker.
-- Set up **Kubernetes Master & Worker nodes** on Ubuntu 20.04.
-- Deploy the application using **K8s manifests**.
+## Step 3 Configure Sonar Server in Manage Jenkins
 
-### **Step 4 — Monitoring & Logging**
-- Install **Prometheus & Grafana** on a monitoring server.
-- Install **Prometheus Plugin** in Jenkins.
-- Set up **Grafana dashboards** to monitor Jenkins & Kubernetes.
+- Grab the Public IP Address of your EC2 Instance, Sonarqube works on Port 9000, so <Public IP>:9000. Goto your Sonarqube Server. Click on Administration → Security → Users → Click on Tokens and Update Token → Give it a name → and click on Generate Token
 
-### **Step 5 — Notifications & Cleanup**
-- Configure **Email Integration** in Jenkins.
-- Automate EC2 **termination** after the project completion.
+![Screenshot](images/images18.png)
 
----
+Goto Jenkins Dashboard → Manage Jenkins → Credentials → Add Secret Text. It should look like this
 
-## 🔹 SecOps Section
-### **Step 6 — Security Scanning & Code Quality**
-- Install and configure **SonarQube** (Docker Container).
-- Perform **static code analysis** on the Netflix Clone repository.
+![Screenshot](images/images19.png)
 
-### **Step 7 — Vulnerability Scanning**
-- Install **Trivy** for container security scanning.
-- Scan the Docker images before deployment.
+- Now, go to Dashboard → Manage Jenkins → System and Add like the below image.
 
-### **Step 8 — Dependency Scanning**
-- Install **OWASP Dependency Check** Plugin in Jenkins.
-- Scan project dependencies for security vulnerabilities.
+![Screenshot](images/images20.png)
 
----
+The Configure System option is used in Jenkins to configure different server
+
+Global Tool Configuration is used to configure different tools that we install using Plugins
+
+- We will install a sonar scanner in the tools.
+
+![Screenshot](images/images21.png)
+
+In the Sonarqube Dashboard add a quality gate also
+
+Administration–> Configuration–>Webhooks
+
+![Screenshot](images/images22.png)
+
+## Step 4  Install OWASP Dependency Check Plugins
+
+- GotoDashboard → Manage Jenkins → Plugins → OWASP Dependency-Check. Click on it and install it without restart.
+
+![Screenshot](images/images23.png)
+
+First, we configured the Plugin and next, we had to configure the Tool
+
+Goto Dashboard → Manage Jenkins → Tools →
+
+![Screenshot](images/images24.png)
+
+## Step 5  Docker Image Build and Push
+
+We need to install the Docker tool in our system, Goto Dashboard → Manage Plugins → Available plugins → Search for Docker and install these plugins
+
+Docker, Docker Common, Docker Pipeline, Docker API, docker-build-step
+
+Add DockerHub Username and Password under Global Credentials
+
+![Screenshot](images/images25.png)
+
+## Step 5  With all plugins installed, now we can run the pipeline
+
+```sh
+
+pipeline {
+    agent any
+    tools {
+        jdk 'jdk17'
+        nodejs 'node16'
+    }
+    environment {
+        SCANNER_HOME = tool 'sonar-scanner'
+    }
+    stages {
+        stage('Clean Workspace') {
+            steps {
+                cleanWs()
+            }
+        }
+        stage('Checkout from Git') {
+            steps {
+                git branch: 'main', url: 'https://github.com/Sarthak221198/Netflix-Clone-DevSecOps.git'
+            }
+        }
+        stage('SonarQube Analysis') {
+            steps {
+                withSonarQubeEnv('sonar-server') {
+                    sh '''
+                    $SCANNER_HOME/bin/sonar-scanner \
+                    -Dsonar.projectName=Netflix \
+                    -Dsonar.projectKey=Netflix
+                    '''
+                }
+            }
+        }
+        stage('Quality Gate') {
+            steps {
+                script {
+                    waitForQualityGate abortPipeline: false, credentialsId: 'Sonar-token'
+                }
+            }
+        }
+        stage('Install Dependencies') {
+            steps {
+                sh "npm install"
+            }
+        }
+        stage('OWASP FS Scan') {
+            steps {
+                dependencyCheck additionalArguments: '--scan ./ --disableYarnAudit --disableNodeAudit', odcInstallation: 'DP-Check'
+                dependencyCheckPublisher pattern: '**/dependency-check-report.xml'
+            }
+        }
+        stage('Trivy FS Scan') {
+            steps {
+                sh "trivy fs . > trivyfs.txt"
+            }
+        }
+        stage('Docker Build & Push') {
+            steps {
+                script {
+                    withDockerRegistry(credentialsId: 'docker', toolName: 'docker') {
+                        sh '''
+                        docker build --build-arg TMDB_V3_API_KEY=4d838e49fd1660a70b4325ca7667fa4c --build-arg API_URL="https://api.themoviedb.org/3" -t netflix .
+                        docker tag netflix sarthak2211/netflix:latest
+                        docker push sarthak2211/netflix:latest
+                        '''
+                    }
+                }
+            }
+        }
+        stage('Trivy Image Scan') {
+            steps {
+                sh "trivy image sarthak2211/netflix > trivyimage.txt"
+            }
+        }
+        
+        stage('Deploy to container'){
+            steps{
+                sh 'docker run -d --name netflix -p 8081:80 sarthak2211/netflix'
+            }
+        }
+    }
+    post {
+        always {
+            emailext attachLog: true,
+                subject: "'${currentBuild.result}'",
+                body: "Project: ${env.JOB_NAME}<br/>" +
+                      "Build Number: ${env.BUILD_NUMBER}<br/>" +
+                      "URL: ${env.BUILD_URL}<br/>",
+                to: 'sarthakmamgain44@gmail.com',
+                attachmentsPattern: 'trivyfs.txt,trivyimage.txt'
+        }
+    }
+}
+
+```
+![Screenshot](images/images26.png)
+
+- Email notification for the success build
+
+![Screenshot](images/images27.png)
 
 ## 🎯 Final Outcome
 Once all steps are completed, the **Netflix Clone App** will be accessible in the browser, running on a secure and optimized DevSecOps pipeline. 🚀
