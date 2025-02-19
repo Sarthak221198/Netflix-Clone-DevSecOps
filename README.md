@@ -305,7 +305,7 @@ We can verify that the targets are healthy and visible on the Prometheus applica
 ```sh
 http://<ip>:9090/targets
 ```
-![Screenshot](images/images6.png)
+![Screenshot](images/images6.PNG)
 
 ## Step 2 — Installing Grafana
 
