@@ -1,6 +1,4 @@
-Netflix Clone - DevSecOps Project
-This project demonstrates a Netflix Clone deployment using a DevSecOps pipeline, integrating CI/CD, security scanning, and monitoring.
+# 🎬 Netflix Clone - DevSecOps Project
 
-Project Overview
-We will be deploying a Netflix Clone application using Jenkins, Docker, Kubernetes, and security tools like SonarQube, Trivy, and OWASP Dependency Check. The setup includes monitoring with Prometheus and Grafana, ensuring security and performance compliance.
-
+## 🚀 Project Overview
+This project follows a **DevSecOps** approach to deploy and secure a Netflix clone application using **Jenkins, Docker, Kubernetes, SonarQube, and Trivy**. It includes CI/CD, security scanning, monitoring, and deployment on AWS.
