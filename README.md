@@ -494,7 +494,7 @@ Administration–> Configuration–>Webhooks
 
 - GotoDashboard → Manage Jenkins → Plugins → OWASP Dependency-Check. Click on it and install it without restart.
 
-![Screenshot](images/images23.png)
+![Screenshot](images/images23.PNG)
 
 First, we configured the Plugin and next, we had to configure the Tool
 
@@ -510,7 +510,7 @@ Docker, Docker Common, Docker Pipeline, Docker API, docker-build-step
 
 Add DockerHub Username and Password under Global Credentials
 
-![Screenshot](images/images25.png)
+![Screenshot](images/images25.PNG)
 
 ## Step 5  With all plugins installed, now we can run the pipeline
 
@@ -613,7 +613,7 @@ pipeline {
 
 - Email notification for the success build
 
-![Screenshot](images/images27.png)
+![Screenshot](images/images27.PNG)
 
 ## 🎯 Final Outcome
 Once all steps are completed, the **Netflix Clone App** will be accessible in the browser, running on a secure and optimized DevSecOps pipeline. 🚀
