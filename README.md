@@ -11,8 +11,9 @@ This project follows a **DevSecOps** approach to deploy and secure a Netflix clo
 
 ## 🔹 DevOps Section
 ### **Step 1 — Launch AWS Infrastructure**
-- Launch an **Ubuntu 22.04 T2 Large**  with an elastic IP associated with the VM
-- Install **Jenkins**, **Docker** and **trivy** and required dependencies.
+- Launch an **Ubuntu 22.04 T2 Large**  with an elastic IP associated with the VM (to have an same public IP incase of mutiple restarts)
+
+### **Step 2 — Installtion of Jenkins, docker and trivy **
 
 **Jenkins**
  is an open-source automation server used for CI/CD (Continuous Integration/Continuous Deployment). It automates the build, test, and deployment process of software development and integrates with various tools like Git, Docker, Kubernetes, and Trivy.
