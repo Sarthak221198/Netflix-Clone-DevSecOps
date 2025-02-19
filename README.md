@@ -15,7 +15,7 @@ This project follows a **DevSecOps** approach to deploy and secure a Netflix clo
 - Install **Jenkins**, **Docker** and **trivy** and required dependencies.
 
 **Jenkins**
-Jenkins is an open-source automation server used for CI/CD (Continuous Integration/Continuous Deployment). It automates the build, test, and deployment process of software development and integrates with various tools like Git, Docker, Kubernetes, and Trivy.
+ is an open-source automation server used for CI/CD (Continuous Integration/Continuous Deployment). It automates the build, test, and deployment process of software development and integrates with various tools like Git, Docker, Kubernetes, and Trivy.
 
 ```sh
 vi jenkins.sh
@@ -44,13 +44,18 @@ sudo chmod 777 jenkins.sh
 ```
 
 - After installing Jenkins, update your AWS EC2 Security Group to allow inbound traffic on port 8080, as      Jenkins operates on this port.
-- Access the application by entering your EC2 Public IP Address followed by port 8080 (<EC2 Public IP Address:8080>).
+- Access the application by entering your EC2 Public IP Address followed by port 8080.
+```sh
 
+ http://54.89.88.87:8080/
+
+```
 - Jenkins Dashboard view
+
 ![Screenshot](images/image.png)
 
 **Docker**
-Docker is a containerization platform that allows developers to package applications and dependencies into lightweight, portable containers. It enables efficient deployment, scaling, and management of applications in different environments.
+ is a containerization platform that allows developers to package applications and dependencies into lightweight, portable containers. It enables efficient deployment, scaling, and management of applications in different environments.
 
 ```sh
 vi docker.sh
@@ -63,7 +68,7 @@ sudo chmod 777 /var/run/docker.sock
 
 ```
 **SonarQube**
-SonarQube is a continuous code quality and security analysis tool that detects bugs, vulnerabilities, and code smells in source code. It integrates with CI/CD pipelines and supports multiple programming languages.
+ is a continuous code quality and security analysis tool that detects bugs, vulnerabilities, and code smells in source code. It integrates with CI/CD pipelines and supports multiple programming languages.
 
 - After installing Docker, deploy a SonarQube container (ensure port 9000 is open in the security group).
 
@@ -72,6 +77,7 @@ docker run -d --name sonar -p 9000:9000 sonarqube:lts-community
 
 ```
 - Sonarqube Dashboard view
+
 ![Screenshot](images/image3.png)
 
 **Trivy** 
