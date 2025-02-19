@@ -446,6 +446,18 @@ Now, we will receive notifications for every successful and failed build in Jenk
         }
     }
 ```
+## 🔹 Plugins Tools installation on Jenkins like JDK, Sonarqube Scanner, NodeJs, OWASP Dependency Check
+
+## Step 1 Install below plugins
+
+- SonarQube Scanner (Install without restart)
+- NodeJs Plugin (Install Without restart)
+- Eclipse Temurin Installer (Install without restart)
+
+## Step 2 Configure Java and Nodejs in Global Tool Configuration
+
+- Goto Manage Jenkins → Tools → Install JDK(17) and NodeJs(16)→ Click on Apply and Save
+
 
 ### **Step 2 — CI/CD Pipeline with Jenkins**
 - Install required Jenkins plugins:  
