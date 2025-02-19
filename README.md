@@ -11,7 +11,7 @@ This project follows a **DevSecOps** approach to deploy and secure a Netflix clo
 
 ## 🔹 Infra Build and tools Prequesitie
 
-### **Step 1 — Launch AWS Infrastructure**
+## Step 1 — Launch AWS Infrastructure
 - Launch an **Ubuntu 22.04 T2 Large**  with an elastic IP associated with the VM (to have the same public IP incase of mutiple restarts)
 
 ### **Step 2 — Installtion of Jenkins, docker and trivy **
