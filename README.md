@@ -316,29 +316,29 @@ http://<ip>:9090/targets
 
 ``` sh
 
-# Step 1: Install Dependencies
+# Install Dependencies
 First, ensure that all necessary dependencies are installed:
 
 sudo apt-get update
 sudo apt-get install -y apt-transport-https software-properties-common
 
-# Step 2: Add the GPG Key
+# Add the GPG Key
 Add the GPG key for Grafana:
 
 wget -q -O - https://packages.grafana.com/gpg.key | sudo apt-key add -
 
-# Step 3: Add Grafana Repository
+# Add Grafana Repository
 Add the repository for Grafana stable releases:
 
 echo "deb https://packages.grafana.com/oss/deb stable main" | sudo tee -a /etc/apt/sources.list.d/grafana.list
 
-# Step 4: Update and Install Grafana
+# Update and Install Grafana
 Update the package list and install Grafana:
 
 sudo apt-get update
 sudo apt-get -y install grafana
 
-# Step 5: Enable and Start Grafana Service
+# Enable and Start Grafana Service
 To automatically start Grafana after a reboot, enable the service:
 
 sudo systemctl enable grafana-server
@@ -347,7 +347,7 @@ Then, start Grafana:
 
 sudo systemctl start grafana-server
 
-# Step 6: Check Grafana Status
+# Check Grafana Status
 Verify the status of the Grafana service to ensure it's running correctly:
 
 sudo systemctl status grafana-server
@@ -359,10 +359,10 @@ http://<your-server-ip>:3000
 
 You'll be prompted to log in to Grafana. The default username is "admin," and the default password is also "admin."
 
-# Step 8: Change the Default Password
+# Change the Default Password
 When you log in for the first time, Grafana will prompt you to change the default password for security reasons. Follow the prompts to set a new password.
 
-# Step 9: Add Prometheus Data Source
+# Add Prometheus Data Source
 To visualize metrics, add a data source:
 
 1. Click on the gear icon (⚙️) in the left sidebar to open the "Configuration" menu.
@@ -374,7 +374,7 @@ To visualize metrics, add a data source:
 6. Click the "Save & Test" button to ensure the data source is working.
 
 
-# Step 10: Import a Dashboard
+# Import a Dashboard
 To make it easier to view metrics, you can import a pre-configured dashboard:
 
 1. Click on the "+" (plus) icon in the left sidebar to open the "Create" menu.
@@ -387,7 +387,7 @@ To make it easier to view metrics, you can import a pre-configured dashboard:
 
 You should now have a Grafana dashboard set up to visualize metrics from Prometheus.
 
-# Step 11: Configure Prometheus Plugin Integration
+# Configure Prometheus Plugin Integration
 Integrate Jenkins with Prometheus to monitor the CI/CD pipeline.
 
 ```
@@ -404,6 +404,32 @@ Integrate Jenkins with Prometheus to monitor the CI/CD pipeline.
 - Jenkins Job monitoring over grafana
 
 ![Screenshot](images/images10.png)
+
+## Step 2 — Email Integration With Jenkins and Plugin Setup
+
+Setting up email notifications in Jenkins for pipeline job status
+
+- Install Email Extension Plugin in Jenkins
+
+![Screenshot](images/images11.png)
+
+- Go to your Gmail and click on your profile and generate app password
+
+- Once the plugin is installed in Jenkins, click on manage Jenkins –> configure system there under the E-mail Notification section configure the details as shown in the below image
+
+![Screenshot](images/images12.PNG)
+
+Click on Manage Jenkins–> credentials and add your mail username and generated app password
+
+![Screenshot](images/images13.png)
+
+- Now under the Extended E-mail Notification section configure the details as shown in the below images
+
+![Screenshot](images/images14.png)
+
+![Screenshot](images/images15.png)
+
+Now, we will receive notifications for every successful and failed build in Jenkins via Gmail, ensuring effective 24/7 monitoring.
 
 ### **Step 2 — CI/CD Pipeline with Jenkins**
 - Install required Jenkins plugins:  
