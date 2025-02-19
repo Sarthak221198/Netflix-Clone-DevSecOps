@@ -615,6 +615,10 @@ pipeline {
 
 ![Screenshot](images/images27.PNG)
 
+- Website access over the <Jenkins-public-ip:8081>
+
+![Screenshot](images/images28.png)
+
 ## 🎯 Final Outcome
 Once all steps are completed, the **Netflix Clone App** will be accessible in the browser, running on a secure and optimized DevSecOps pipeline. 🚀
 
