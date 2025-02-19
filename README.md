@@ -42,6 +42,17 @@ sudo chmod 777 jenkins.sh
 - After installing Jenkins, update your AWS EC2 Security Group to allow inbound traffic on port 8080, as      Jenkins operates on this port.
 - Access the application by entering your EC2 Public IP Address followed by port 8080 (<EC2 Public IP Address:8080>).
 
+```sh
+vi docker.sh
+
+sudo apt-get update
+sudo apt-get install docker.io -y
+sudo usermod -aG docker $USER   #my case is ubuntu
+newgrp docker
+sudo chmod 777 /var/run/docker.sock
+
+```
+
 ### **Step 2 — CI/CD Pipeline with Jenkins**
 - Install required Jenkins plugins:  
   - **JDK**, **SonarQube Scanner**, **NodeJS**, **OWASP Dependency Check**
