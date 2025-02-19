@@ -373,7 +373,6 @@ To visualize metrics, add a data source:
    - Set the "URL" to http://localhost:9090 (assuming Prometheus is running on the same server).
 6. Click the "Save & Test" button to ensure the data source is working.
 
-![Screenshot](images/images7.png)
 
 # Step 10: Import a Dashboard
 To make it easier to view metrics, you can import a pre-configured dashboard:
@@ -393,6 +392,13 @@ Integrate Jenkins with Prometheus to monitor the CI/CD pipeline.
 
 ```
 
+![Screenshot](images/images7.png)
+
+![Screenshot](images/images8.png)
+
+![Screenshot](images/images9.png)
+
+![Screenshot](images/images10.png)
 
 ### **Step 2 — CI/CD Pipeline with Jenkins**
 - Install required Jenkins plugins:  
