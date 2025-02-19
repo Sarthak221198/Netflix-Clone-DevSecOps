@@ -47,7 +47,7 @@ sudo chmod 777 jenkins.sh
 - Access the application by entering your EC2 Public IP Address followed by port 8080.
 ```sh
 
- http://54.89.88.87:8080/
+ http://<<EC2-PublicIP>>:8080/
 
 ```
 - Jenkins Dashboard view
@@ -81,7 +81,7 @@ docker run -d --name sonar -p 9000:9000 sonarqube:lts-community
 ![Screenshot](images/image3.png)
 
 **Trivy** 
-Trivy is an open-source vulnerability scanner for containers, file systems, and code repositories. It detects vulnerabilities, misconfigurations, and exposed secrets. It is widely used in DevOps pipelines for security compliance.
+ is an open-source vulnerability scanner for containers, file systems, and code repositories. It detects vulnerabilities, misconfigurations, and exposed secrets. It is widely used in DevOps pipelines for security compliance.
 
 ```sh
 vi trivy.sh
