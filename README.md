@@ -9,12 +9,12 @@ This project follows a **DevSecOps** approach to deploy and secure a Netflix clo
 
 ---
 
-## 🔹 Infra Build and tools Prequesitie
+## 🔹 Infra Build and tools prerequisites
 
 ## Step 1 — Launch AWS Infrastructure
 - Launch an **Ubuntu 22.04 T2 Large**  with an elastic IP associated with the VM (to have the same public IP incase of mutiple restarts)
 
-### **Step 2 — Installtion of Jenkins, docker and trivy **
+## Step 2 — Installtion of Jenkins, docker and trivy
 
 **Jenkins**
  is an open-source automation server used for CI/CD (Continuous Integration/Continuous Deployment). It automates the build, test, and deployment process of software development and integrates with various tools like Git, Docker, Kubernetes, and Trivy.
@@ -96,7 +96,7 @@ sudo apt-get install trivy -y
 
 ```
 
-### **Step 3 — Obtain the TMDB API Key **
+## Step 3 — Obtain the TMDB API Key
 
 To integrate with The Movie Database (TMDB) and access movie-related data, you need an API key. The TMDB API allows developers to fetch movie details, ratings, images, and more for applications. Follow the steps below to generate your API key:
 
