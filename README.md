@@ -113,8 +113,206 @@ Why is the TMDB API Key Needed?
 
 ## 🔹 Monitoring Tools installation
 
-## Step 1 — Launch AWS Infrastructure
+## Step 1 — Installing Prometheus
 - Launch an **Ubuntu 22.04 T2 Large**  with an elastic IP associated with the VM (to have the same public IP incase of mutiple restarts)
+
+**Prometheus** 
+ is an open-source monitoring and alerting tool designed for recording real-time metrics in a time-series database. It is widely used for infrastructure monitoring, particularly in cloud environments and Kubernetes clusters.
+
+To ensure Prometheus runs efficiently as a background service, we will:
+
+- Create a dedicated system user for Prometheus.
+- Download and configure Prometheus.
+- Set up a systemd service to manage Prometheus automatically.
+
+To run Prometheus with restricted privileges, we create a dedicated Linux user:
+
+```sh
+sudo useradd --system --no-create-home --shell /bin/false prometheus
+```
+This prevents Prometheus from logging into the system and enhances security.
+
+Extract Prometheus files, move them, and create directories:
+
+```sh
+tar -xvf prometheus-2.47.1.linux-amd64.tar.gz
+cd prometheus-2.47.1.linux-amd64/
+sudo mkdir -p /data /etc/prometheus
+sudo mv prometheus promtool /usr/local/bin/
+sudo mv consoles/ console_libraries/ /etc/prometheus/
+sudo mv prometheus.yml /etc/prometheus/prometheus.yml
+```
+
+To ensure Prometheus has the correct permissions, set ownership for the configuration and data directories:
+
+```sh
+sudo chown -R prometheus:prometheus /etc/prometheus/ /data/
+```
+
+To manage Prometheus as a background service, we define a systemd unit file:
+
+```sh
+sudo nano /etc/systemd/system/prometheus.service
+
+[Unit]
+# Description of the service
+Description=Prometheus  
+
+# Ensures Prometheus starts after the network is available
+Wants=network-online.target  
+After=network-online.target  
+
+# Service restart settings
+StartLimitIntervalSec=500  
+StartLimitBurst=5  
+
+[Service]
+# Run Prometheus as the prometheus user
+User=prometheus  
+Group=prometheus  
+
+# Run the service as a simple process
+Type=simple  
+
+# Restart settings in case of failure
+Restart=on-failure  
+RestartSec=5s  
+
+# Command to start Prometheus with required configurations
+ExecStart=/usr/local/bin/prometheus \  
+  --config.file=/etc/prometheus/prometheus.yml \  # Specify the configuration file
+  --storage.tsdb.path=/data \  # Define the directory to store time-series data
+  --web.console.templates=/etc/prometheus/consoles \  # Location for web console templates
+  --web.console.libraries=/etc/prometheus/console_libraries \  # Console libraries
+  --web.listen-address=0.0.0.0:9090 \  # Listen on all network interfaces on port 9090
+  --web.enable-lifecycle  # Enable API-based management  
+
+[Install]
+# Ensure the service starts on boot
+WantedBy=multi-user.target  
+
+# Enable Prometheus to start on system boot
+sudo systemctl enable prometheus  
+
+# Start the Prometheus service
+sudo systemctl start prometheus  
+
+# Check the status of the Prometheus service
+sudo systemctl status prometheus  
+
+```
+Access Prometheus in a web browser using the server's IP and port 9090:
+
+
+- Prometheus Dashboard view
+
+We can see the local host present as the data source which is up and running on port 9090
+
+![Screenshot](images/image4.png)
+
+## Step 2 — Installing Node Exporter
+
+**Node Exporter** 
+
+ is an essential component of Prometheus-based monitoring. It is a lightweight agent that collects and exposes system-level metrics from a Linux server, making them available for Prometheus to scrape and analyze.
+
+```sh
+# Create a dedicated system user for Node Exporter without a home directory or login shell
+sudo useradd --system --no-create-home --shell /bin/false node_exporter  
+
+# Download the latest Node Exporter package
+wget https://github.com/prometheus/node_exporter/releases/download/v1.6.1/node_exporter-1.6.1.linux-amd64.tar.gz  
+
+# Extract the downloaded archive
+tar -xvf node_exporter-1.6.1.linux-amd64.tar.gz  
+
+# Move the Node Exporter binary to a system-wide location
+sudo mv node_exporter-1.6.1.linux-amd64/node_exporter /usr/local/bin/  
+
+# Remove the extracted files to clean up unnecessary data
+rm -rf node_exporter*  
+
+# Create a systemd service file to manage Node Exporter as a system service
+sudo nano /etc/systemd/system/node_exporter.service  
+
+```
+## Step 3 — Integrating Jenkins and NodeExporter with Prometheus
+
+Integrating Jenkins with Prometheus to monitor the CI/CD pipeline.
+
+To enable Prometheus to scrape metrics from both Node Exporter and Jenkins, update the prometheus.yml configuration file as shown below:
+
+```sh
+sudo cat /etc/prometheus/prometheus.yml
+
+# my global config
+global:
+  scrape_interval: 15s # Set the scrape interval to every 15 seconds. Default is every 1 minute.
+  evaluation_interval: 15s # Evaluate rules every 15 seconds. The default is every 1 minute.
+  # scrape_timeout is set to the global default (10s).
+
+# Alertmanager configuration
+alerting:
+  alertmanagers:
+    - static_configs:
+        - targets:
+          # - alertmanager:9093
+
+# Load rules once and periodically evaluate them according to the global 'evaluation_interval'.
+rule_files:
+  # - "first_rules.yml"
+  # - "second_rules.yml"
+
+# A scrape configuration containing exactly one endpoint to scrape:
+# Here it's Prometheus itself.
+scrape_configs:
+  # The job name is added as a label `job=<job_name>` to any timeseries scraped from this config.
+  - job_name: "prometheus"
+
+    # metrics_path defaults to '/metrics'
+    # scheme defaults to 'http'.
+
+    static_configs:
+      - targets: ["localhost:9090"]
+
+  - job_name: "node_export"
+    static_configs:
+      - targets: ["localhost:9100"]
+  - job_name: "jenkins"
+    metrics_path: "/prometheus"
+    static_configs:
+      - targets: ["<your-jenkins-ip>:8080"]
+
+```
+Run the following command to check if the configuration file is correctly formatted:
+
+```sh
+promtool check config /etc/prometheus/prometheus.yml
+```
+
+Instead of restarting the Prometheus service, apply the new configuration dynamically:
+
+```sh
+curl -X POST http://localhost:9090/-/reload
+```
+
+Installing the Prometheus plugin in Jenkins is required to enable metric scraping by Prometheus.
+
+![Screenshot](images/image5.png)
+
+We can verify that the targets are healthy and visible on the Prometheus application
+
+```sh
+http://<ip>:9090/targets
+```
+![Screenshot](images/image6.png)
+
+## Step 2 — Installing Grafana
+
+**Grafana** 
+
+Grafana is essential for visualizing and analyzing metrics collected by Prometheus from Jenkins and Node Exporter. While Prometheus efficiently gathers and stores time-series data, its built-in UI is limited in terms of visualization. Grafana enhances monitoring by providing interactive dashboards, real-time graphs, and alerts, making it easier to track system performance. It allows users to customize views, correlate metrics, and receive notifications based on predefined thresholds. By integrating Grafana into our setup, we create a complete monitoring solution where Prometheus handles data collection, and Grafana presents that data in an intuitive and insightful manner for better decision-making and troubleshooting.
+
 
 
 ### **Step 2 — CI/CD Pipeline with Jenkins**
