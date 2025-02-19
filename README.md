@@ -12,10 +12,10 @@ This project follows a **DevSecOps** approach to deploy and secure a Netflix clo
 ## 🔹 DevOps Section
 ### **Step 1 — Launch AWS Infrastructure**
 - Launch an **Ubuntu 22.04 T2 Large**  with an elastic IP associated with the VM
-- Open the ports 443, 22, 80, 9000, 8080 for accessing the applications
 - Install **Jenkins**, **Docker**, and required dependencies.
 ```sh
 vi jenkins.sh
+
 #!/bin/bash
 sudo apt update -y
 #sudo apt upgrade -y
@@ -39,8 +39,8 @@ sudo chmod 777 jenkins.sh
 
 ```
 
-- Once Jenkins is installed, you will need to go to your AWS EC2 Security Group and open Inbound Port 8080, since Jenkins works on Port 8080. 
-- access the application by using your IP address and at port 8080 (<EC2 Public IP Address:8080>)
+- After installing Jenkins, update your AWS EC2 Security Group to allow inbound traffic on port 8080, as      Jenkins operates on this port.
+- Access the application by entering your EC2 Public IP Address followed by port 8080 (<EC2 Public IP Address:8080>).
 
 ### **Step 2 — CI/CD Pipeline with Jenkins**
 - Install required Jenkins plugins:  
