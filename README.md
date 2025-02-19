@@ -95,6 +95,24 @@ sudo apt-get install trivy -y
 
 ```
 
+### **Step 3 — Obtain the TMDB API Key **
+
+To integrate with The Movie Database (TMDB) and access movie-related data, you need an API key. The TMDB API allows developers to fetch movie details, ratings, images, and more for applications. Follow the steps below to generate your API key:
+
+- Use a VPN (For Users in India) – Since TMDB is currently inaccessible in India, enable a VPN and connect to a different region where the website is available.
+- Visit the TMDB Website – Open a web browser and navigate to TMDB (The Movie Database).
+- Sign In or Register – Click on "Login" and sign in to your account. If you don’t have one, create a new account.
+- Access API Settings – Once logged in, go to your profile settings by clicking on your profile icon and selecting “Settings.”
+- Generate an API Key – In the left-side menu, click on “API” and choose the option to create a new API key.
+- Accept Terms & Provide Details – Agree to the terms and conditions, fill in the required details, and submit your request.
+- Retrieve Your API Key – Once approved, your unique API key will be generated and displayed.
+
+Why is the TMDB API Key Needed?
+- The API key acts as an authentication mechanism that allows your application to access TMDB’s vast database of movies, TV shows, and related metadata. It enables fetching movie details, searching for films, displaying posters, and integrating movie-related content into your project.
+
+
+
+
 ### **Step 2 — CI/CD Pipeline with Jenkins**
 - Install required Jenkins plugins:  
   - **JDK**, **SonarQube Scanner**, **NodeJS**, **OWASP Dependency Check**
