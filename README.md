@@ -311,8 +311,87 @@ http://<ip>:9090/targets
 
 **Grafana** 
 
-Grafana is essential for visualizing and analyzing metrics collected by Prometheus from Jenkins and Node Exporter. While Prometheus efficiently gathers and stores time-series data, its built-in UI is limited in terms of visualization. Grafana enhances monitoring by providing interactive dashboards, real-time graphs, and alerts, making it easier to track system performance. It allows users to customize views, correlate metrics, and receive notifications based on predefined thresholds. By integrating Grafana into our setup, we create a complete monitoring solution where Prometheus handles data collection, and Grafana presents that data in an intuitive and insightful manner for better decision-making and troubleshooting.
+ is essential for visualizing and analyzing metrics collected by Prometheus from Jenkins and Node Exporter. While Prometheus efficiently gathers and stores time-series data, its built-in UI is limited in terms of visualization. Grafana enhances monitoring by providing interactive dashboards, real-time graphs, and alerts, making it easier to track system performance. It allows users to customize views, correlate metrics, and receive notifications based on predefined thresholds. By integrating Grafana into our setup, we create a complete monitoring solution where Prometheus handles data collection, and Grafana presents that data in an intuitive and insightful manner for better decision-making and troubleshooting.
 
+
+``` sh
+
+# Step 1: Install Dependencies
+First, ensure that all necessary dependencies are installed:
+
+sudo apt-get update
+sudo apt-get install -y apt-transport-https software-properties-common
+
+# Step 2: Add the GPG Key
+Add the GPG key for Grafana:
+
+wget -q -O - https://packages.grafana.com/gpg.key | sudo apt-key add -
+
+# Step 3: Add Grafana Repository
+Add the repository for Grafana stable releases:
+
+echo "deb https://packages.grafana.com/oss/deb stable main" | sudo tee -a /etc/apt/sources.list.d/grafana.list
+
+# Step 4: Update and Install Grafana
+Update the package list and install Grafana:
+
+sudo apt-get update
+sudo apt-get -y install grafana
+
+# Step 5: Enable and Start Grafana Service
+To automatically start Grafana after a reboot, enable the service:
+
+sudo systemctl enable grafana-server
+
+Then, start Grafana:
+
+sudo systemctl start grafana-server
+
+# Step 6: Check Grafana Status
+Verify the status of the Grafana service to ensure it's running correctly:
+
+sudo systemctl status grafana-server
+
+# Step 7: Access Grafana Web Interface
+Open a web browser and navigate to Grafana using your server's IP address. The default port for Grafana is 3000. Example:
+
+http://<your-server-ip>:3000
+
+You'll be prompted to log in to Grafana. The default username is "admin," and the default password is also "admin."
+
+# Step 8: Change the Default Password
+When you log in for the first time, Grafana will prompt you to change the default password for security reasons. Follow the prompts to set a new password.
+
+# Step 9: Add Prometheus Data Source
+To visualize metrics, add a data source:
+
+1. Click on the gear icon (⚙️) in the left sidebar to open the "Configuration" menu.
+2. Select "Data Sources."
+3. Click on the "Add data source" button.
+4. Choose "Prometheus" as the data source type.
+5. In the "HTTP" section:
+   - Set the "URL" to http://localhost:9090 (assuming Prometheus is running on the same server).
+6. Click the "Save & Test" button to ensure the data source is working.
+
+![Screenshot](images/images7.png)
+
+# Step 10: Import a Dashboard
+To make it easier to view metrics, you can import a pre-configured dashboard:
+
+1. Click on the "+" (plus) icon in the left sidebar to open the "Create" menu.
+2. Select "Dashboard."
+3. Click on the "Import" dashboard option.
+4. Enter the dashboard code you want to import (e.g., code 1860).
+5. Click the "Load" button.
+6. Select the data source you added (Prometheus) from the dropdown.
+7. Click on the "Import" button.
+
+You should now have a Grafana dashboard set up to visualize metrics from Prometheus.
+
+# Step 11: Configure Prometheus Plugin Integration
+Integrate Jenkins with Prometheus to monitor the CI/CD pipeline.
+
+```
 
 
 ### **Step 2 — CI/CD Pipeline with Jenkins**
