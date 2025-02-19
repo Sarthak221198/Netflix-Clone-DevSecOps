@@ -431,6 +431,22 @@ Click on Manage Jenkins–> credentials and add your mail username and generated
 
 Now, we will receive notifications for every successful and failed build in Jenkins via Gmail, ensuring effective 24/7 monitoring.
 
+- The following pipeline job will ensure that we receive an email with the Trivy FS image scan details, including the attached report.
+
+```sh
+    post {
+        always {
+            emailext attachLog: true,
+                subject: "'${currentBuild.result}'",
+                body: "Project: ${env.JOB_NAME}<br/>" +
+                      "Build Number: ${env.BUILD_NUMBER}<br/>" +
+                      "URL: ${env.BUILD_URL}<br/>",
+                to: 'sarthakmamgain44@gmail.com',
+                attachmentsPattern: 'trivyfs.txt,trivyimage.txt'
+        }
+    }
+```
+
 ### **Step 2 — CI/CD Pipeline with Jenkins**
 - Install required Jenkins plugins:  
   - **JDK**, **SonarQube Scanner**, **NodeJS**, **OWASP Dependency Check**
