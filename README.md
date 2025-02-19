@@ -52,6 +52,13 @@ newgrp docker
 sudo chmod 777 /var/run/docker.sock
 
 ```
+- After installing Docker, deploy a SonarQube container (ensure port 9000 is open in the security group).
+
+```sh
+docker run -d --name sonar -p 9000:9000 sonarqube:lts-community
+
+```
+
 
 ### **Step 2 — CI/CD Pipeline with Jenkins**
 - Install required Jenkins plugins:  
