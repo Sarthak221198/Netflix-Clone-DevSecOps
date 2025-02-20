@@ -495,6 +495,8 @@ Administration–> Configuration–>Webhooks
 
 ## Step 4  Install OWASP Dependency Check Plugins
 
+- OWASP Dependency Check is a security tool that helps identify vulnerable dependencies in your project. It scans your project's dependencies (third-party libraries) and checks them against publicly known vulnerabilities in the National Vulnerability Database (NVD).
+
 - GotoDashboard → Manage Jenkins → Plugins → OWASP Dependency-Check. Click on it and install it without restart.
 
 ![Screenshot](images/images23.PNG)
@@ -582,7 +584,7 @@ pipeline {
                 script {
                     withDockerRegistry(credentialsId: 'docker', toolName: 'docker') {
                         sh '''
-                        docker build --build-arg TMDB_V3_API_KEY=4d838e49fd1660a70b4325ca7667fa4c --build-arg API_URL="https://api.themoviedb.org/3" -t netflix .
+                        docker build --build-arg TMDB_V3_API_KEY=cxxxxxxxxxxxxxxxxxxxxx --build-arg API_URL="https://api.themoviedb.org/3" -t netflix .
                         docker tag netflix sarthak2211/netflix:latest
                         docker push sarthak2211/netflix:latest
                         '''
@@ -622,7 +624,9 @@ pipeline {
 
 ![Screenshot](images/images27.PNG)
 
-- Website access over the <Jenkins-public-ip:8081>
+- Access the website via Jenkins Public IP on port 8081:
+
+http://<jenkins-public-ip>:8081
 
 ![Screenshot](images/images28.png)
 
@@ -786,13 +790,17 @@ Instead of restarting the Prometheus service, apply the new configuration dynami
 curl -X POST http://localhost:9090/-/reload
 ```
 
-- All the scrape targets in prometheus which can then add as a source in grafana for GUI based monitoring
+- All scrape targets in Prometheus which can be added as a data source in Grafana for GUI-based monitoring.
 
 ![Screenshot](images/images30.PNG)
 
-- We have updated the replicas to 3 in the deployment manifest and as well push the changes to the main branch we can see new pods created in the cluster through Argo CD.
+## ArgoCD Testing
+
+- We updated the replicas to 3 in the deployment manifest and pushed the changes to the main branch. The new pods are now visible in the cluster via Argo CD.
 
 ![Screenshot](images/images38.PNG)
+
+- New Pods created through ArgoCD
 
 ![Screenshot](images/images37.PNG)
 
