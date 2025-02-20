@@ -787,6 +787,24 @@ curl -X POST http://localhost:9090/-/reload
 
 ![Screenshot](images/images30.PNG)
 
-## 🎯 Final Outcome
-Once all steps are completed, the **Netflix Clone App** will be accessible in the browser, running on a secure and optimized DevSecOps pipeline. 🚀
+- We have updated the replicas to 3 in the deployment manifest and as well push the changes to the main branch we can see new pods created in the cluster through Argo CD.
+
+![Screenshot](images/images38.PNG)
+
+![Screenshot](images/images37.PNG)
+
+
+
+## 🚀 Final Project Overview
+
+This project implements a DevSecOps pipeline to deploy and secure a Netflix Clone Application using modern automation and security practices. The deployment is managed through Jenkins, Docker, Kubernetes (KIND cluster), SonarQube, and Trivy, ensuring continuous integration, delivery, and security scanning.
+
+## 🎯 Key Takeaways
+
+- Security-first approach with continuous vulnerability scanning.
+- Efficient CI/CD pipeline for rapid and automated deployments.
+- Local Kubernetes setup using KIND for lightweight and cost-effective testing.
+- End-to-end monitoring to ensure system reliability.
+
+This project showcases DevSecOps best practices, improving security, scalability, and automation for modern cloud-native applications. 🚀
 
