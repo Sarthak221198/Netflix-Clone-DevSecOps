@@ -353,42 +353,45 @@ Verify the status of the Grafana service to ensure it's running correctly:
 sudo systemctl status grafana-server
 
 # Step 7: Access Grafana Web Interface
-Open a web browser and navigate to Grafana using your server's IP address. The default port for Grafana is 3000. Example:
+To access Grafana, open your web browser and enter your server's IP address followed by port 3000:
 
 http://<your-server-ip>:3000
 
-You'll be prompted to log in to Grafana. The default username is "admin," and the default password is also "admin."
+When the login screen appears, use the default credentials:
+
+- Username: admin
+- Password: admin
 
 # Change the Default Password
-When you log in for the first time, Grafana will prompt you to change the default password for security reasons. Follow the prompts to set a new password.
+Upon first login, Grafana will ask you to change the default password. Follow the prompts to set a secure password before proceeding.
 
 # Add Prometheus Data Source
-To visualize metrics, add a data source:
 
-1. Click on the gear icon (⚙️) in the left sidebar to open the "Configuration" menu.
-2. Select "Data Sources."
+To visualize metrics in Grafana, you need to add Prometheus as a data source:
+
+1. Click on the ⚙️ (gear icon) in the left sidebar to open Configuration.
+2. Navigate to Data Sources and click Add data source.
 3. Click on the "Add data source" button.
-4. Choose "Prometheus" as the data source type.
-5. In the "HTTP" section:
-   - Set the "URL" to http://localhost:9090 (assuming Prometheus is running on the same server).
-6. Click the "Save & Test" button to ensure the data source is working.
+4. Choose Prometheus from the list.
+5. Under the HTTP section, set the URL to http://localhost:9090 (assuming Prometheus is running on the same  machine).
+6. Click Save & Test to verify the connection.
 
 
 # Import a Dashboard
 To make it easier to view metrics, you can import a pre-configured dashboard:
 
-1. Click on the "+" (plus) icon in the left sidebar to open the "Create" menu.
-2. Select "Dashboard."
-3. Click on the "Import" dashboard option.
-4. Enter the dashboard code you want to import (e.g., code 1860).
+1. Click on the + (plus icon) in the left sidebar and select Dashboard.
+2. Choose the Import option.
+3. Enter the dashboard ID (e.g., 1860) and click Load.
+4. Select Prometheus as the data source..
 5. Click the "Load" button.
-6. Select the data source you added (Prometheus) from the dropdown.
-7. Click on the "Import" button.
+6. Click on the "Import" button.
 
 You should now have a Grafana dashboard set up to visualize metrics from Prometheus.
 
 # Configure Prometheus Plugin Integration
-Integrate Jenkins with Prometheus to monitor the CI/CD pipeline.
+
+To monitor your CI/CD pipeline, configure Jenkins to work with Prometheus by enabling the appropriate plugins and setting up metric collection. This will allow you to track build performance, resource usage, and system health effectively.
 
 ```
 
