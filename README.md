@@ -504,6 +504,10 @@ Goto Dashboard → Manage Jenkins → Tools →
 
 ## Step 5  Docker Image Build and Push
 
+**Docker**
+
+ is an open-source platform that allows developers to build, package, and run applications in lightweight, portable containers. It eliminates compatibility issues by bundling applications with all their dependencies, ensuring consistency across different environments. Docker enables efficient resource utilization, rapid deployment, and scalability, making it a key tool for modern DevOps and cloud-native applications.
+
 We need to install the Docker tool in our system, Goto Dashboard → Manage Plugins → Available plugins → Search for Docker and install these plugins
 
 Docker, Docker Common, Docker Pipeline, Docker API, docker-build-step
@@ -618,6 +622,170 @@ pipeline {
 - Website access over the <Jenkins-public-ip:8081>
 
 ![Screenshot](images/images28.png)
+
+## 🔹 Kubernetes and ArgoCD Integration
+
+## KIND installation
+
+- We will be deploying the Netflix clone application on a KIND (Kubernetes in Docker) cluster.
+
+KIND (Kubernetes in Docker) is a tool for running Kubernetes clusters inside Docker containers. It is primarily used for testing and local development, providing a lightweight and quick way to set up a fully functional Kubernetes cluster without requiring a dedicated VM or cloud infrastructure. KIND is ideal for CI/CD pipelines, learning Kubernetes, and testing Kubernetes applications in a controlled environment.
+
+**Kubernetes** 
+
+ (K8s) is an open-source container orchestration platform designed to automate the deployment, scaling, and management of containerized applications. It enables efficient resource utilization, fault tolerance, and high availability by distributing workloads across multiple nodes. Kubernetes provides key features such as service discovery, load balancing, self-healing, and automated rollouts/rollbacks, making it a powerful tool for modern cloud-native applications.
+
+- KIND Installtion
+
+- Launch an **Ubuntu 22.04 T2 Large**  with an elastic IP associated with the VM (to have the same public IP incase of mutiple restarts)
+
+
+ ```sh
+
+#vi kind.sh
+
+[ $(uname -m) = x86_64 ] && curl -Lo ./kind https://kind.sigs.k8s.io/dl/v0.20.0/kind-linux-amd64
+chmod +x ./kind
+sudo cp ./kind /usr/local/bin/kind
+rm -rf kind
+
+```
+ 
+ ```sh
+
+#vi config.yml
+
+kind: Cluster
+apiVersion: kind.x-k8s.io/v1alpha4
+
+nodes:
+- role: control-plane
+  image: kindest/node:v1.30.0
+- role: worker
+  image: kindest/node:v1.30.0
+- role: worker
+  image: kindest/node:v1.30.0
+
+kind create cluster --config=config.yml
+
+ ```
+- The above create command will help us in creating 2 worker nodes and 1 control plane
+
+```sh
+
+ubuntu@ip-172-31-22-72:~/k8s_install$ kubectl get nodes
+NAME                 STATUS   ROLES           AGE   VERSION
+kind-control-plane   Ready    control-plane   2d    v1.30.0
+kind-worker          Ready    <none>          2d    v1.30.0
+kind-worker2         Ready    <none>          2d    v1.30.0
+
+```
+
+## ArgoCD installation
+
+**Argo CD**
+
+ is a declarative, GitOps-based continuous delivery tool for Kubernetes. It enables automated deployment, synchronization, and management of applications by tracking changes in a Git repository. Argo CD ensures that the desired state defined in Git matches the actual state of the Kubernetes cluster, providing visibility, version control, and rollback capabilities. It simplifies application lifecycle management, making deployments more reliable and consistent.
+
+ ``` sh
+
+#Creating a namespace for Argo CD:
+kubectl create namespace argocd
+
+#Applying the Argo CD manifest:
+kubectl apply -n argocd -f https://raw.githubusercontent.com/argoproj/argo-cd/stable/manifests/install.yaml
+
+#Check services in Argo CD namespace:
+kubectl get svc -n argocd
+
+#Expose Argo CD server using NodePort:
+kubectl patch svc argocd-server -n argocd -p '{"spec": {"type": "NodePort"}}'
+
+#Forward ports to access Argo CD server:
+kubectl port-forward -n argocd service/argocd-server 8443:443 --address=0.0.0.0 &
+
+#Argo CD Initial Admin Password
+
+kubectl get secret -n argocd argocd-initial-admin-secret -o jsonpath="{.data.password}" | base64 -d && echo
+
+ ```
+
+- After enabling port 8443 on the VMS security group we will be able to access Argo CD over the public IP of the VM
+
+- Argo CD dashboard
+
+![Screenshot](images/images29.PNG)
+
+
+## K8s cluster deployment through ArgoCD
+
+- Configuration of GitHub Repository
+
+Go to Settings → Repositories → Connect Repository → Enter the required details as shown below and click Connect.
+
+![Screenshot](images/images31.PNG)
+
+![Screenshot](images/images32.PNG)
+
+
+- Configuration of Netflix clone App
+
+click on New App --> enter required details and click on sync now.
+
+![Screenshot](images/images33.PNG)
+
+![Screenshot](images/images34.PNG)
+
+![Screenshot](images/images36.PNG)
+
+- After sync complete K8s resources created and netflix app accessible over the nodeport 30007
+
+![Screenshot](images/images35.PNG)
+
+![Screenshot](images/images28.png)
+
+- Now, we can scale resources and enable auto-healing through Argo CD by directly editing the GitHub repository. The changes will automatically be reflected in the KIND cluster.
+
+## KIND cluster monitoring through prometheus.
+
+- Edit the prometheus config file and add the kind cluster as an scrape target
+
+```sh
+
+# sudo cat /etc/prometheus/prometheus.yml
+
+    static_configs:
+      - targets: ["localhost:9090"]
+
+  - job_name: "node_export"
+    static_configs:
+      - targets: ["localhost:9100"]
+  - job_name: "jenkins"
+    metrics_path: "/prometheus"
+    static_configs:
+      - targets: ["52.71.251.179:8080"]
+
+  - job_name: "K8s"
+    metrics_path: "/metrics"
+    static_configs:
+      - targets: ["54.82.48.117:9100"]
+
+```
+Run the following command to check if the configuration file is correctly formatted:
+
+```sh
+promtool check config /etc/prometheus/prometheus.yml
+```
+
+Instead of restarting the Prometheus service, apply the new configuration dynamically:
+
+```sh
+curl -X POST http://localhost:9090/-/reload
+```
+
+- All the scrape targets in prometheus which can then add as a source in grafana for GUI based monitoring
+
+![Screenshot](images/images30.PNG)
 
 ## 🎯 Final Outcome
 Once all steps are completed, the **Netflix Clone App** will be accessible in the browser, running on a secure and optimized DevSecOps pipeline. 🚀
