@@ -152,9 +152,10 @@ sudo chown -R prometheus:prometheus /etc/prometheus/ /data/
 
 To manage Prometheus as a background service, we define a systemd unit file:
 
-```sh
+
 sudo nano /etc/systemd/system/prometheus.service
 
+```sh
 [Unit]
 # Description of the service
 Description=Prometheus  
@@ -191,6 +192,7 @@ ExecStart=/usr/local/bin/prometheus \
 [Install]
 # Ensure the service starts on boot
 WantedBy=multi-user.target  
+```
 
 # Enable Prometheus to start on system boot
 sudo systemctl enable prometheus  
@@ -201,7 +203,7 @@ sudo systemctl start prometheus
 # Check the status of the Prometheus service
 sudo systemctl status prometheus  
 
-```
+
 Access Prometheus in a web browser using the server's IP and port 9090:
 
 
