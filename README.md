@@ -135,6 +135,7 @@ This prevents Prometheus from logging into the system and enhances security.
 Extract Prometheus files, move them, and create directories:
 
 ```sh
+wget https://github.com/prometheus/prometheus/releases/download/v2.47.1/prometheus-2.47.1.linux-amd64.tar.gz
 tar -xvf prometheus-2.47.1.linux-amd64.tar.gz
 cd prometheus-2.47.1.linux-amd64/
 sudo mkdir -p /data /etc/prometheus
